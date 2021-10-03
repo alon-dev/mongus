@@ -173,6 +173,7 @@ class View:
         for buttons in self.buttons:
             for button in buttons:
                 button["state"] = "normal"
+
     def callback2(self):
         self._controller.pc = False
         self.button["state"] = "disabled"
@@ -180,6 +181,7 @@ class View:
         for buttons in self.buttons:
             for button in buttons:
                 button["state"] = "normal"
+                
     def restart(self):
         python = sys.executable
         os.execl(python, python, *sys.argv)
