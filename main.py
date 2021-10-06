@@ -1,7 +1,7 @@
 import numpy as np
 
 count = 0
-wins = []
+wins = set()
 def all_boards():
     i = 0
     for x0 in [' ', 'X', '0']:
@@ -27,7 +27,7 @@ def is_win(board):
                 win = True
                 item = board[i]
             else:
-                if item != board[i]:
+                if item != board[i] and item != ' ':
                     valid_win = False
     for i in [0, 1, 2]:
         if (board[i] == board[i + 3] == board[i + 6]) and board[i] != ' ':
@@ -35,7 +35,7 @@ def is_win(board):
                 win = True
                 item = board[i]
             else:
-                if item != board[i]:
+                if item != board[i] and item != ' ':
                     valid_win = False
     if (board[0] == board[4] == board[8]) and board[0] != ' ' or \
        (board[2] == board[4] == board[6]) and board[2] != ' ':
@@ -77,17 +77,18 @@ def full(board):
 
 def recursive_board_3(board, location):
     global count
+    global wins
     if valid(board) and is_win(board)[0] and location == 9: # trimming
-        if not any((board == ).all() for x in y):
+        if not tuple(board) in wins:
             count = count + 1
             print(board)
-            wins.append(board)
+            wins.add(tuple(board))
         return
     elif valid(board) and full(board) and location == 9:  # filtering
-        if not (np.array(board) == np.array(wins)).all(1).any():
+        if not tuple(board) in wins:
             count = count + 1
             print(board)
-            wins.append(board)
+            wins.add(tuple(board))
         return
     if (location == 9):
         return
@@ -110,5 +111,5 @@ def printb(board):
 board = [' ' for i in range(9)]
 print('final')
 recursive_board_3(board, 0)
-print(count)
+print(len(wins))
 #recurse_board_time(board, True)
