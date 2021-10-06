@@ -17,35 +17,17 @@ def all_boards():
                                             print(i, ':', board)
                                             i = i + 1
 
-def is_win(board):
-    win = False
-    item = ' '
-    valid_win = True
+def is_win(board, item):
     for i in [0,3,6]:
-        if (board[i] == board[i+1] == board[i+2]) and board[i] != ' ':
-            if win == False:
-                win = True
-                item = board[i]
-            else:
-                if item != board[i] and item != ' ':
-                    valid_win = False
+        if (board[i] == board[i+1] == board[i+2] == item):
+            return True
     for i in [0, 1, 2]:
-        if (board[i] == board[i + 3] == board[i + 6]) and board[i] != ' ':
-            if win == False:
-                win = True
-                item = board[i]
-            else:
-                if item != board[i] and item != ' ':
-                    valid_win = False
-    if (board[0] == board[4] == board[8]) and board[0] != ' ' or \
-       (board[2] == board[4] == board[6]) and board[2] != ' ':
-        if win == False:
-                win = True
-                item = board[0]
-        else:
-            if item != board[0]:
-                valid_win = False
-    return win, valid_win, item
+        if (board[i] == board[i + 3] == board[i + 6] == item):
+            return True
+    if (board[0] == board[4] == board[8]) and board[0] == item or \
+       (board[2] == board[4] == board[6]) and board[2] == item:
+        return True
+    return False
 
 def valid(board):
         x_count = 0
@@ -55,14 +37,15 @@ def valid(board):
                 x_count = x_count + 1
             elif board[i] == '0':
                 o_count = o_count + 1
-        win = is_win(board)
-        if win[0] == False:
-            return (x_count - o_count <= 1) and (x_count - o_count >= 0)
-        if win == (True, True, "X"):
+        if is_win(board, 'X') == True and is_win(board, '0') == False:
             return x_count - o_count == 1
-        elif win == (True, True, "O"):
+        elif is_win(board, '0') == True and is_win(board, 'X') == False:
             return x_count - o_count == 0
-        if win[1] == False:
+        elif is_win(board, 'X') == True and is_win(board, '0') == True:
+            return False
+        elif full(board):
+            return x_count - o_count == 1
+        else:
             return False
 
 def full(board):
@@ -78,19 +61,12 @@ def full(board):
 def recursive_board_3(board, location):
     global count
     global wins
-    if valid(board) and is_win(board)[0] and location == 9: # trimming
-        if not tuple(board) in wins:
-            count = count + 1
-            print(board)
-            wins.add(tuple(board))
+    if valid(board) and location >= 9: # trimming
+        count = count + 1
+        print(board)
+        wins.add(tuple(board))
         return
-    elif valid(board) and full(board) and location == 9:  # filtering
-        if not tuple(board) in wins:
-            count = count + 1
-            print(board)
-            wins.add(tuple(board))
-        return
-    if (location == 9):
+    if location >= 9:
         return
     for x in [' ','X', '0']:
         board[location] = x                 # start
