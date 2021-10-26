@@ -29,17 +29,25 @@ class Model:
             return 1
 
     def next_board(self):
-        i = 0
-        j = 0
-        while True:
-            i = randint(0, 2)
-            j = randint(0, 2)
-            if self.state[i, j] == "":
-                self.state[i, j] = "O"
-                break
+        self.state = Model.minimax(self.state)
         x = self.check_win()
         print(x)
-        return i, j, x
+        return self.state, x
+    
+    @staticmethod
+    def is_tie(board):
+        for i in range(3):
+            for j in range(3):
+                if board[i,j] == "":
+                    return False
+        return True
+    
+    @staticmethod
+    def is_win(board,player):
+        for i in range(3):
+            if (player == board[i][0] == board[i][1] == board[i][2] != "") or (player == board[0][i] == board[1][i] == board[2][i] != "") or (player == board[0][0] == board[1][1] == board[2][2] != "") or (player == board[2][0] == board[1][1] == board[0][2] != ""):
+                return True
+        return False
 
     @staticmethod
     def nextBoards(board, player: int) -> list:
@@ -55,41 +63,48 @@ class Model:
 
     @staticmethod
     def minimax(game_state):
-        moves = Model.nextBoards(game_state, 0)
+        moves = Model.nextBoards(game_state,0)
         best_move = moves[0]
-        best_score = float('-inf')
+        best_score = float("-inf")
         for move in moves:
             score = Model.min_play(move)
             if score > best_score:
                 best_move = move
                 best_score = score
         return best_move
-
-    @ staticmethod
-    def min_play(game_state, depth):
-        if Model.is_win(game_state, 0):
-            return 1
-        elif Model.is_win(game_state, 1):
+    @staticmethod
+    def min_play(game_state):
+        if Model.is_win(game_state,"0"):
             return -1
+        elif Model.is_win(game_state,"X"):
+            return 1
         elif Model.is_tie(game_state):
             return 0
-        moves = Model.nextBoards(game_state, 1)
-        best_score = float()
-        best_move=moves[0]
+
+        moves = Model.nextBoards(game_state,"X")
+        best_score = float('inf')
+        best_move = moves[0]
         for move in moves:
-        score=Board.max_play(move)
-        if score & lt; best_score:
-        best_score=score
-        return best_score
+            score = Model.max_play(move)
+            if score < best_score:
+                best_score = score
+        return  best_score
     
-    @ staticmethod
+    @staticmethod
     def max_play(game_state):
-        # כמו בפעולה הקודמת
-        moves = Board.nextBoards()
-        best_score = float()
-        best_move=moves[0]
+        if Model.is_win(game_state,"0"):
+            return -1
+        elif Model.is_win(game_state,"X"):
+            return 1
+        elif Model.is_tie(game_state):
+            return 0
+        moves = Model.nextBoards(game_state,"0")
+        best_score = float('-inf')
+        best_move = moves[0]
         for move in moves:
-        score=Board.min_play(move)
-        if score & gt; best_score:
-        best_score=score
+            score = Model.min_play(move)
+            if score > best_score:
+                best_score = score
         return best_score
+
+    

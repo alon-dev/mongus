@@ -80,8 +80,10 @@ class MyButton(Button):
             self._view.b9["state"] = "disabled"
             return
         if self._view._controller.pc:
-            i, j, x = self._view._controller.play()
-            self._view.buttons[i][j]["text"] = "O"
+            state, x = self._view._controller.play()
+            for i in range(3):
+                for j in range(3):
+                    self._view.buttons[i][j]["text"] = state[i][j]
             if x == 1:
                 messagebox.showinfo("GAME OVER!", "O WINS!")
                 self._view.mainLabel["text"] = "Game Over- O WINS!"

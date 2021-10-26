@@ -19,12 +19,12 @@ class Controller():
         else:
             return 3
     def play(self):
-        i, j, x = self._model.next_board()
-        print(x)
-        if x == 0:
+        state, win = self._model.next_board()
+        print(win)
+        if win == 0:
             n = 1
-        elif x == 1:
+        elif win == 1:
             n = 2
         else:
             n = 3
-        return i, j, n
+        return state, n
