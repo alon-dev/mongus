@@ -71,17 +71,18 @@ class Model:
             if score > best_score:
                 best_move = move
                 best_score = score
+        print(best_score)
         return best_move
     @staticmethod
     def min_play(game_state):
         if Model.is_win(game_state,"0"):
-            return -1
-        elif Model.is_win(game_state,"X"):
             return 1
+        elif Model.is_win(game_state,"X"):
+            return -1
         elif Model.is_tie(game_state):
             return 0
 
-        moves = Model.nextBoards(game_state,"X")
+        moves = Model.nextBoards(game_state,1)
         best_score = float('inf')
         best_move = moves[0]
         for move in moves:
@@ -93,12 +94,12 @@ class Model:
     @staticmethod
     def max_play(game_state):
         if Model.is_win(game_state,"0"):
-            return -1
-        elif Model.is_win(game_state,"X"):
             return 1
+        elif Model.is_win(game_state,"X"):
+            return -1
         elif Model.is_tie(game_state):
             return 0
-        moves = Model.nextBoards(game_state,"0")
+        moves = Model.nextBoards(game_state,0)
         best_score = float('-inf')
         best_move = moves[0]
         for move in moves:
